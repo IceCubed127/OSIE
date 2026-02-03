@@ -15,9 +15,16 @@ def install_os():
         win_choice = input("Choose a version (1-3): ")
         if win_choice == '1':
             print("Choose language for Windows XP Service Pack 3")
-            lang=["Arabic", "Czech", "Danish", "German", "Greek", "English", "Spanish", "Finnish", "French","Hebrew", "Hungarian", "Italian", "Japanese", "Korean", "Dutch", "Norwegian", "Polish", "Portuguese-Brazil", "Portuguese-Portugal","Russian", "Swedish", "Turkish", "zh-hans", "Chinese-Hong Kong SAR", "Chinese-Traditional"]
-            print("Arabic, Czech, Danish, German, Greek, English, Spanish, Finnish, French\nHebrew, Hungarian, Italian, Japanese, Korean, Dutch, Norwegian, Polish, Portuguese-Brazil, Portuguese-Portugal\nRussian, Swedish, Turkish, zh-hans, Chinese-Hong Kong SAR, Chinese-Traditional")
+            lang={"Arabic":"ar*74065", "Czech":"cs*73965", "Danish":"da*73968", "German":"de*73985", "Greek":"el*73988", "English":"en*73974", "Spanish":"es*74009", "Finnish":"fi*73979", "French":"fr*73982","Hebrew":"he*74143", "Hungarian":"hu*73991", "Italian":"it*73994", "Japanese":"ja*74058", "Korean":"ko*87427", "Dutch":"nl*73971", "Norwegian":"no*74000", "Polish":"pl*74003", "Portuguese-Brazil":"pt-br*74137", "Portuguese-Portugal":"pt-pt*74006","Russian":"ru*74146", "Swedish":"sv*74012", "Turkish":"tr*74085", "zh-hans":"zh-hans*74070", "Chinese-Hong Kong SAR":"zh-hk*74075", "Chinese-Traditional":"zh-tw*74140"}
+            print(", ".join(lang))
             lang_choice = input("Enter language: ")
+            if lang_choice in lang:
+                lang_choice = lang[lang_choice].split('*')
+                url = f'https://drive.massgrave.dev/{lang_choice[0]}_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-{lang_choice[1]}.iso'
+            else:
+                print("Invalid language choice. Please try again.")
+                return install_os()
+                        
 
         elif win_choice == '2':
             pass  #TODO: Implement Windows 10 installation logic
