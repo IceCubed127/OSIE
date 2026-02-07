@@ -5,6 +5,60 @@ import time
 import requests
 from tqdm import tqdm
 
+def download_file(url,filename):
+    download_path = Path.home() / "Downloads" / filename
+    temp_path = Path.home() / "Downloads" / (filename + '.osiedownload')
+    max_retries = 3
+
+    print(f"Downloading to {download_path}...")
+    for attempt in range(1,max_retries+1):
+        try:
+            resume_pos = temp_path.stat().st_size if temp_path.exists() else 0
+            headers ={}
+            if resume_pos > 0:
+                headers['Range'] = f'bytes={resume_pos}-'
+                print(f"Resuming download from {resume_pos/(1024*1024):.2f} MB...")
+            response = requests.get(url, stream=True, headers=headers,timeout=30)
+            response.raise_for_status()
+            if 'content-length' in response.headers:
+                total_size = int(response.headers.get('content-length', 0)) + resume_pos
+            else:
+                total_size = resume_pos
+
+            mode = 'ab' if resume_pos > 0 else 'wb'
+            with open(temp_path, mode) as f, tqdm(
+                desc=filename,
+                total = total_size,
+                initial=resume_pos,
+                unit='iB',
+                unit_scale=True,
+                unit_divisor=1024,
+            ) as bar:
+                for data in response.iter_content(chunk_size = 1024):
+                    size = f.write(data)
+                    bar.update(size)
+
+                temp_path.rename(download_path)
+                print("Download completed.")
+                return str(download_path)
+
+        except KeyboardInterrupt:
+                print("\n\nDownload interrupted by user. Cleaning Up.")
+                temp_path.unlink(missing_ok = True)
+                print("Cleaned up partial files. Exiting...")
+                return None
+        
+        except (requests.exceptions.RequestException, IOError) as e:
+            if attempt <= max_retries:
+                print(f"\n\nDownload failed: {e}")
+                print(f"Retrying... (Attempt {attempt} of {max_retries})")
+                time.sleep(5)
+            else:
+                print(f"\n\nDownload failed after {max_retries} attempts: {e}")
+                if temp_path.exists():
+                    print(f"File is partially complete and unusable at this point. Please rerun the program to resume downloading.")
+                return None
+
 def install_os():
     #TODO: Should return the file path of the installed OS image
     print("\n1. Windows")
@@ -19,65 +73,13 @@ def install_os():
         print("3. Windows XP")
         win_choice = input("Choose a version (1-3): ")
         if win_choice == '1':
-            pass  #TODO: Implement Windows 11 installation logic
+            url = 'https://archive.org/download/win-11-23h2/Win11_23H2_English_x64.iso'
+            filename = 'windows_11_23h2.iso'
+            return download_file(url,filename)
         elif win_choice == '2':
             url = 'https://archive.org/download/en-us_windows_10_consumer_editions_version_22h2_updated_feb_2023_x64_dvd_c29e4bb3/en-us_windows_10_consumer_editions_version_22h2_updated_feb_2023_x64_dvd_c29e4bb3.iso'
             filename = 'windows_10_22h2.iso'
-            download_path = Path.home() / "Downloads" / filename
-            temp_path = Path.home() / "Downloads" / (filename + '.osiedownload')
-            max_retries = 3
-
-            print(f"Downloading Windows 10 to {download_path}...")
-            for attempt in range(1,max_retries+1):
-                    try:
-                        resume_pos = temp_path.stat().st_size if temp_path.exists() else 0
-                        headers = {}
-                        if resume_pos > 0:
-                            headers['Range'] = f'bytes={resume_pos}-'
-                            print(f"Resuming download from {resume_pos/(1024*1024):.2f} MB...")
-
-                        response = requests.get(url, stream=True, headers=headers, timeout=30)
-                        response.raise_for_status()
-
-                        if 'content-length' in response.headers:
-                            total_size = int(response.headers.get('content-length', 0)) + resume_pos
-                        else:
-                            total_size = resume_pos
-
-                        mode = 'ab' if resume_pos > 0 else 'wb'
-                        with open(temp_path, mode) as f, tqdm(
-                            desc=filename,
-                            total=total_size,
-                            initial=resume_pos,
-                            unit='iB',
-                            unit_scale=True,
-                            unit_divisor=1024,
-                        ) as bar:
-                            for data in response.iter_content(chunk_size = 1024):
-                                size = f.write(data)
-                                bar.update(size)
-
-                        # Rename to final filename on successful completion
-                        temp_path.rename(download_path)
-                        print("Download completed.")
-                        return str(download_path)
-
-                    except KeyboardInterrupt:
-                        print("\n\nDownload interrupted by user. Cleaning Up.")
-                        temp_path.unlink(missing_ok=True)
-                        print("Cleaned up partially downloaded file. Exiting...")
-                        return None
-                    
-                    except (requests.exceptions.RequestException, IOError) as e:
-                        if attempt <= max_retries:
-                            print(f"\n\nDownload failed: {e}")
-                            print(f"Retrying... (Attempt {attempt} of {max_retries})")
-                            time.sleep(5)
-                        else:
-                            print(f"\n\nDownload failed after {max_retries} attempts: {e}")
-                            if temp_path.exists():
-                                print(f"File is partially complete and unusable at this point. Please rerun the program to resume downloading.")
-                            return None
+            return download_file(url,filename)
                         
         elif win_choice == '3':
             print("Choose language for Windows XP Service Pack 3")
@@ -92,7 +94,7 @@ def install_os():
                 print(f"Downloading Windows XP Service Pack 3 in {language.capitalize()}...")
                 time.sleep(30) #Allow user to enable download from browser
                 while any((Path.home() / "Downloads").glob("*.crdownload")) and not (Path.home() / "Downloads" / f"{lang_choice[0]}_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-{lang_choice[1]}.iso").exists():
-                    time.sleep(30) # Timeout for 30 seconds
+                    time.sleep(30)
                 else:
                     if not any((Path.home() / "Downloads").glob("*.crdownload")) and not (Path.home() / "Downloads" / f"{lang_choice[0]}_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-{lang_choice[1]}.iso").exists():
                         print("Download failed or file not found. Please try again.")
@@ -107,9 +109,9 @@ def install_os():
             print("Invalid choice. Please choose a valid option.")
             return install_os()
     elif choice == '2':
-        pass
+        pass #TODO: Add macos downloads here
     elif choice == '3':
-        pass
+        pass #TODO: add linux downloads here
     elif choice == '4':
         main()
     else:
