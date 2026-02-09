@@ -4,7 +4,7 @@ from pathlib import Path
 import time
 import requests
 from tqdm import tqdm
-from colorama import init, Fore, Style, reinit
+from colorama import init, Fore, Style
 init(autoreset=True)
 def download_file(url,filename):
     download_path = Path.home() / "Downloads" / filename
@@ -111,8 +111,8 @@ def install_os(choice=None):
             print(Fore.RED + "Invalid choice. Please choose a valid option.")
             return install_os('1')
     elif choice == '2':
-        if os.name == 'nt':
-            print(Fore.YELLOW + "Note: Installation of MacOS is not recommended via ISO images. Hence, a recovery image will be downloaded instead using OpenCore Windows tools. This is the vanilla partition and does not have OpenCore EFI files, therefore should work exactly like an installer downloaded on MacOS.")
+        if os.name == 'nt': #Windows
+            print(Fore.YELLOW + "Note: Installation of MacOS is not recommended via ISO images. Hence, a recovery image will be downloaded instead using OpenCore tools. This is the vanilla partition and does not have OpenCore EFI files, therefore should work exactly like an installer downloaded on MacOS.")
             user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
             if user_input.lower() == 'y':
                 path = Path(os.getcwd()) / "OSIE-OpenCore" / "macrecovery.py"
@@ -142,37 +142,42 @@ def install_os(choice=None):
                         return install_os('2')
                 
                 print(Fore.CYAN + "\n\n====================== MacOS Version ======================")
-                print(Fore.CYAN + "1. Sequoia\n2. Sonoma\n3. Ventura\n4. Monterey\n5. Big Sur\n6. Catalina\n7. Mojave\n8 High Sierra\n9. Sierra\n10. El Capitan\n11. Yosemite\n12. Mavericks\n13.Mountain Lion\n14. Lion\n15. Exit")
-                mac_choice = input(Fore.MAGENTA + "Choose a version (1-15): ")
+                print(Fore.CYAN + "1. Tahoe\n2. Sequoia\n3. Sonoma\n4. Ventura\n5. Monterey\n6. Big Sur\n7. Catalina\n8. Mojave\n9. High Sierra\n10. Sierra\n11. El Capitan\n12. Yosemite\n13. Mavericks\n14. Mountain Lion\n15. Lion\n16. Exit")
+                mac_choice = input(Fore.MAGENTA + "Choose a version (1-16): ")
                 match mac_choice:
                     case '1':
-                        os.system('py macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download')
+                        os.system('py macrecovery.py -b Mac-CFF7D910A743CAAF -m 00000000000000000 -os latest download')
                     case '2':
-                        os.system('py macrecovery.py -b Mac-226CB3C6A851A671 -m 00000000000000000 download')
+                        os.system('py macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download')
                     case '3':
-                        os.system('py macrecovery.py -b Mac-4B682C642B45593E -m 00000000000000000 download')
+                        os.system('py macrecovery.py -b Mac-226CB3C6A851A671 -m 00000000000000000 download')
                     case '4':
-                        os.system('py macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000000000 download')
+                        os.system('py macrecovery.py -b Mac-4B682C642B45593E -m 00000000000000000 download')
                     case '5':
-                        os.system('py macrecovery.py -b Mac-42FD25EABCABB274 -m 00000000000000000 download')
+                        os.system('py macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000000000 download')
                     case '6':
-                        os.system('py macrecovery.py -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
+                        os.system('py macrecovery.py -b Mac-42FD25EABCABB274 -m 00000000000000000 download')
                     case '7':
-                        os.system('py macrecovery.py -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
+                        os.system('py macrecovery.py -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
                     case '8':
-                        os.system('py macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000J80300 download')
+                        os.system('py macrecovery.py -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
                     case '9':
-                        os.system('py macrecovery.py -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
+                        os.system('py macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000J80300 download')
                     case '10':
-                        os.system('py macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
+                        os.system('py macrecovery.py -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
                     case '11':
-                        os.system('py macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
+                        os.system('py macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
                     case '12':
-                        os.system('py macrecovery.py -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
+                        os.system('py macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
                     case '13':
-                        os.system('py macrecovery.py -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
+                        os.system('py macrecovery.py -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
                     case '14':
+                        os.system('py macrecovery.py -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
+                    case '15':
                         os.system('py macrecovery.py -b Mac-2E6FAB96566FE58C -m 00000000000F25Y00 download')
+                    case '16':
+                        print(Fore.CYAN + "Returning to main menu...")
+                        return main()
                     case _:
                         print(Fore.CYAN + "Invalid Input. Please enter a valid option")
                         return install_os('2')
@@ -180,10 +185,87 @@ def install_os(choice=None):
             else:
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
-        elif os.name == 'posix':
-            pass #TODO: add macOS downloads here for macos
-        else:
-            pass #TODO: Probably linux. add download links here too
+        elif os.name == 'posix': # MacOSX
+            try:
+                os.system('softwareupdate --list-full-installers; echo; echo "Please enter version number you wish to download:"; read REPLY; [ -n "$REPLY" ] && softwareupdate --fetch-full-installer --full-installer-version "$REPLY"')
+            except Exception as e:
+                print(Fore.RED + f"An error occurred: {e}")
+            else:
+                print(Fore.GREEN + "Download completed successfully. Files are stored in Applications folder.")
+        else: #Probably Linux or some other unsupported OS.
+            print(Fore.YELLOW + "Note: Installation of MacOS is not recommended via ISO images. Hence, a recovery image will be downloaded instead using OpenCore tools. This is the vanilla partition and does not have OpenCore EFI files, therefore should work exactly like an installer downloaded on MacOS.")
+            user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
+            if user_input.lower() == 'y':
+                path = Path(os.getcwd()) / "OSIE-OpenCore" / "macrecovery.py"
+                
+                # Check if file already exists
+                if path.exists():
+                    print(Fore.GREEN + "macrecovery.py already exists. Skipping download.")
+                else:
+                    print(Fore.CYAN + "Starting Dependency Download (Credits: OpenCore Team @ https://github.com/acidanthera/OpenCorePkg)\n\n")
+                    try:
+                        response=requests.get("https://raw.githubusercontent.com/acidanthera/OpenCorePkg/refs/heads/master/Utilities/macrecovery/macrecovery.py", stream=True, timeout=30)
+                        response.raise_for_status()
+                        size=int(response.headers.get('content-length', 0))
+                        with open(path, 'wb') as f, tqdm(
+                            desc="macrecovery.py",
+                            total=size,
+                            unit='iB',
+                            unit_scale=True,
+                            unit_divisor=1024,
+                        ) as bar:
+                            for data in response.iter_content(chunk_size=1024):
+                                size = f.write(data)
+                                bar.update(size)
+                        print(Fore.GREEN+"Dependencies downloaded successfully.")
+                    except requests.exceptions.RequestException as e:
+                        print(Fore.RED + f"Failed to download dependencies: {e}")
+                        return install_os('2')
+                
+                print(Fore.CYAN + "\n\n====================== MacOS Version ======================")
+                print(Fore.CYAN + "1. Tahoe\n2. Sequoia\n3. Sonoma\n4. Ventura\n5. Monterey\n6. Big Sur\n7. Catalina\n8. Mojave\n9. High Sierra\n10. Sierra\n11. El Capitan\n12. Yosemite\n13. Mavericks\n14. Mountain Lion\n15. Lion\n16. Exit")
+                mac_choice = input(Fore.MAGENTA + "Choose a version (1-16): ")
+                match mac_choice:
+                    case '1':
+                        os.system('python3 ./macrecovery.py -b Mac-CFF7D910A743CAAF -m 00000000000000000 -os latest download')
+                    case '2':
+                        os.system('python3 ./macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000000000 download')
+                    case '3':
+                        os.system('python3 ./macrecovery.py -b Mac-827FAC58A8FDFA22 -m 00000000000000000 download')
+                    case '4':
+                        os.system('python3 ./macrecovery.py -b Mac-B4831CEBD52A0C4C -m 00000000000000000 download')
+                    case '5':
+                        os.system('python3 ./macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000000000 download')
+                    case '6':
+                        os.system('python3 ./macrecovery.py -b Mac-2BD1B31983FE1663 -m 00000000000000000 download')
+                    case '7':
+                        os.system('python3 ./macrecovery.py -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
+                    case '8':
+                        os.system('python3 ./macrecovery.py -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
+                    case '9':
+                        os.system('python3 ./macrecovery.py -b Mac-BE088AF8C5EB4FA2 -m 00000000000J80300 download')
+                    case '10':
+                        os.system('python3 ./macrecovery.py -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
+                    case '11':
+                        os.system('python3 ./macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
+                    case '12':
+                        os.system('python3 ./macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
+                    case '13':
+                        os.system('python3 ./macrecovery.py -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
+                    case '14':
+                        os.system('python3 ./macrecovery.py -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
+                    case '15':
+                        os.system('python3 ./macrecovery.py -b Mac-C3EC7CD22292981F -m 00000000000F0HM00 download')
+                    case '16':
+                        print(Fore.CYAN + "Returning to main menu...")
+                        return main()
+                    case _:
+                        print(Fore.CYAN + "Invalid Input. Please enter a valid option")
+                        return install_os('2')
+                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE-OpenCore"}")
+            else:
+                print(Fore.CYAN + "Returning to main menu...")
+                return main()
     elif choice == '3':
         pass #TODO: add linux downloads here
     elif choice == '4':
