@@ -267,7 +267,46 @@ def install_os(choice=None):
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
     elif choice == '3':
-        pass #TODO: add linux downloads here
+        print(Fore.CYAN + "Choose a Linux Distribution:")
+        print(Fore.CYAN + "1. Ubuntu\n2.Fedora\n3. Arch Linux\nKali Linux\n5. Debian\n6. Linux Mint\n8. Pop!_OS\n9. Zorin OS\n10. Exit")
+        linux_choice = input(Fore.MAGENTA + "Choose a distribution (1-10): ")
+        if linux_choice == '1':
+            print(Fore.YELLOW + "")
+            print(Fore.CYAN + "1. Ubuntu 24.04.3 LTS\n2. Ubuntu 25.10\n3. Ubuntu 22.04 LTS (Jammy Jellyfish)\n4. Ubuntu Server 24.04.3 LTS\n5. Ubuntu Server 25.10\n6. Other Ubuntu Versions\n7. Exit")
+            ubuntu_choice = input(Fore.MAGENTA + "Choose an Ubuntu Version:")
+            match ubuntu_choice:
+                case '1':
+                    url = 'https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-desktop-amd64.iso'
+                    filename = 'ubuntu-24.04.3-desktop-amd64.iso'
+                    return download_file(url,filename)
+                case '2':
+                    url = "https://releases.ubuntu.com/25.10/ubuntu-25.10-desktop-amd64.iso"
+                    filename = "ubuntu-25.10-desktop-amd64.iso"
+                    return download_file(url,filename)
+                case '3':
+                    url = "https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso"
+                    filename = "ubuntu-22.04.5-desktop-amd64.iso"
+                    return download_file(url,filename)
+                case '4':
+                    url = "https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-live-server-amd64.iso"
+                    filename = "ubuntu-24.04.3-live-server-amd64.iso"
+                    return download_file(url,filename)
+                case '5':
+                    url = "https://releases.ubuntu.com/25.10/ubuntu-25.10-live-server-amd64.iso"
+                    filename = "ubuntu-25.10-live-server-amd64.iso"
+                    return download_file(url,filename)
+                case '6':
+                    print(Fore.YELLOW + "Redirecting to Ubuntu releases page...")
+                    time.sleep(3)
+                    webbrowser.open("https://releases.ubuntu.com/")
+                case '7':
+                    print(Fore.CYAN + "Returning to main menu...")
+                    return main()
+                case _:
+                    print(Fore.RED + "Invalid choice. Please choose a valid option.")
+                    return install_os('3')
+        elif linux_choice == '2':
+            pass #TODO: Implement Fedora Download options here.
     elif choice == '4':
         main()
     else:
@@ -282,22 +321,22 @@ def ascii(clear=False):
         os.system('cls' if os.name == 'nt' else 'clear')
     print(r"""                                                                      
                                                                       
-     OOOOOOOOO        SSSSSSSSSSSSSSS IIIIIIIIIIEEEEEEEEEEEEEEEEEEEEEE
-   OO:::::::::OO    SS:::::::::::::::SI::::::::IE::::::::::::::::::::E
- OO:::::::::::::OO S:::::SSSSSS::::::SI::::::::IE::::::::::::::::::::E
-O:::::::OOO:::::::OS:::::S     SSSSSSSII::::::IIEE::::::EEEEEEEEE::::E
-O::::::O   O::::::OS:::::S              I::::I    E:::::E       EEEEEE
-O:::::O     O:::::OS:::::S              I::::I    E:::::E             
-O:::::O     O:::::O S::::SSSS           I::::I    E::::::EEEEEEEEEE   
-O:::::O     O:::::O  SS::::::SSSSS      I::::I    E:::::::::::::::E   
-O:::::O     O:::::O    SSS::::::::SS    I::::I    E:::::::::::::::E   
-O:::::O     O:::::O       SSSSSS::::S   I::::I    E::::::EEEEEEEEEE   
-O:::::O     O:::::O            S:::::S  I::::I    E:::::E             
-O::::::O   O::::::O            S:::::S  I::::I    E:::::E       EEEEEE
-O:::::::OOO:::::::OSSSSSSS     S:::::SII::::::IIEE::::::EEEEEEEE:::::E
- OO:::::::::::::OO S::::::SSSSSS:::::SI::::::::IE::::::::::::::::::::E
-   OO:::::::::OO   S:::::::::::::::SS I::::::::IE::::::::::::::::::::E
-     OOOOOOOOO      SSSSSSSSSSSSSSS   IIIIIIIIIIEEEEEEEEEEEEEEEEEEEEEE
+     OOOOOOOOO         SSSSSSSSSSSSSSS  IIIIIIIIII EEEEEEEEEEEEEEEEEEEEEE
+   OO:::::::::OO     SS:::::::::::::::S I::::::::I E::::::::::::::::::::E
+ OO:::::::::::::OO  S:::::SSSSSS::::::S I::::::::I E::::::::::::::::::::E
+O:::::::OOO:::::::O S:::::S     SSSSSSS II::::::II EE::::::EEEEEEEEE::::E
+O::::::O   O::::::O S:::::S               I::::I     E:::::E       EEEEEE
+O:::::O     O:::::O S:::::S               I::::I     E:::::E             
+O:::::O     O:::::O  S::::SSSS            I::::I     E::::::EEEEEEEEEE   
+O:::::O     O:::::O   SS::::::SSSSS       I::::I     E:::::::::::::::E   
+O:::::O     O:::::O     SSS::::::::SS     I::::I     E:::::::::::::::E   
+O:::::O     O:::::O        SSSSSS::::S    I::::I     E::::::EEEEEEEEEE   
+O:::::O     O:::::O             S:::::S   I::::I     E:::::E             
+O::::::O   O::::::O             S:::::S   I::::I     E:::::E       EEEEEE
+O:::::::OOO:::::::O SSSSSSS     S:::::S II::::::II EE::::::EEEEEEEE:::::E
+ OO:::::::::::::OO  S::::::SSSSSS:::::S I::::::::I E::::::::::::::::::::E
+   OO:::::::::OO    S:::::::::::::::SS  I::::::::I E::::::::::::::::::::E
+     OOOOOOOOO       SSSSSSSSSSSSSSS    IIIIIIIIII EEEEEEEEEEEEEEEEEEEEEE
                                                                       
         Operating Systems Installation and Extraction Utility   """)
 
