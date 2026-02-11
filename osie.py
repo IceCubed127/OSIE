@@ -306,7 +306,32 @@ def install_os(choice=None):
                     print(Fore.RED + "Invalid choice. Please choose a valid option.")
                     return install_os('3')
         elif linux_choice == '2':
-            pass #TODO: Implement Fedora Download options here.
+            print(Fore.CYAN + "1. Fedora 43 Desktop\n2. Fedora 43 Workstation\n3. Fedora 43 Server\n4. Fedora 43 CoreOS\n5. Other Fedora Versions\n6. Exit")
+            choice = input(Fore.MAGENTA + "Choose a Fedora Version:")
+            match choice:
+                case '1':
+                    url = "https://download.fedoraproject.org/pub/fedora/linux/releases/43/KDE/x86_64/iso/Fedora-KDE-Desktop-Live-43-1.6.x86_64.iso"
+                    download_file(url,"fedora-43-desktop.iso")
+                case '2':
+                    url = "https://download.fedoraproject.org/pub/fedora/linux/releases/43/Workstation/x86_64/iso/Fedora-Workstation-Live-43-1.6.x86_64.iso"
+                    download_file(url,"fedora-43-workstation.iso")
+                case '3':
+                    webbrowser.open("https://www.fedoraproject.org/server/download/")
+                case '4':
+                    url = "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/43.20260119.3.1/x86_64/fedora-coreos-43.20260119.3.1-live-iso.x86_64.iso"
+                    download_file(url, "fedora-coreos-43.iso")
+                case '5':
+                    print(Fore.YELLOW + "Redirecting to Fedora releases page...")
+                    time.sleep(3)
+                    webbrowser.open("https://www.fedoraproject.org/#editions")
+                case '6':
+                    print(Fore.CYAN + "Returning to main menu...")
+                    return main()
+                case _:
+                    print(Fore.RED + "Invalid choice. Please choose a valid option.")
+                    return install_os('3')
+        elif linux_choice == '3':
+            pass #TODO: Add arch linux installation options.
     elif choice == '4':
         main()
     else:
