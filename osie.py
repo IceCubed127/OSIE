@@ -7,8 +7,8 @@ from tqdm import tqdm
 from colorama import init, Fore, Style
 init(autoreset=True)
 def download_file(url,filename):
-    download_path = Path.home() / "Downloads" / filename
-    temp_path = Path.home() / "Downloads" / (filename + '.osiedownload')
+    download_path = Path.home() / "Downloads" / "OSIE" / "ISOs" / filename
+    temp_path = Path.home() / "Downloads" / "OSIE" / "ISOs" / (filename + '.osiedownload')
     max_retries = 3
 
     print(f"Downloading to {download_path}...")
@@ -115,7 +115,7 @@ def install_os(choice=None):
             print(Fore.YELLOW + "Note: Installation of MacOS is not recommended via ISO images. Hence, a recovery image will be downloaded instead using OpenCore tools. This is the vanilla partition and does not have OpenCore EFI files, therefore should work exactly like an installer downloaded on MacOS.")
             user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
             if user_input.lower() == 'y':
-                path = Path(os.getcwd()) / "OSIE-OpenCore" / "macrecovery.py"
+                path = Path(os.getcwd()) / "OSIE" / "OpenCore" / "macrecovery.py"
                 
                 # Check if file already exists
                 if path.exists():
@@ -181,7 +181,7 @@ def install_os(choice=None):
                     case _:
                         print(Fore.CYAN + "Invalid Input. Please enter a valid option")
                         return install_os('2')
-                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE-OpenCore"}")
+                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE" / "OpenCore"}")
             else:
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
@@ -196,7 +196,7 @@ def install_os(choice=None):
             print(Fore.YELLOW + "Note: Installation of MacOS is not recommended via ISO images. Hence, a recovery image will be downloaded instead using OpenCore tools. This is the vanilla partition and does not have OpenCore EFI files, therefore should work exactly like an installer downloaded on MacOS.")
             user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
             if user_input.lower() == 'y':
-                path = Path(os.getcwd()) / "OSIE-OpenCore" / "macrecovery.py"
+                path = Path(os.getcwd()) / "OSIE" / "OpenCore" / "macrecovery.py"
                 
                 # Check if file already exists
                 if path.exists():
@@ -262,13 +262,13 @@ def install_os(choice=None):
                     case _:
                         print(Fore.CYAN + "Invalid Input. Please enter a valid option")
                         return install_os('2')
-                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE-OpenCore"}")
+                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE" / "OpenCore"}")
             else:
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
     elif choice == '3':
         print(Fore.CYAN + "Choose a Linux Distribution:")
-        print(Fore.CYAN + "1. Ubuntu\n2.Fedora\n3. Arch Linux\nKali Linux\n5. Debian\n6. Linux Mint\n8. Pop!_OS\n9. Zorin OS\n10. Exit")
+        print(Fore.CYAN + "1. Ubuntu\n2.Fedora\n3. Arch Linux\n4. Kali Linux\n5. Parrot OS\n6. Debian\n7. Linux Mint\n8. Pop!_OS\n9. Zorin OS\n10. Exit")
         linux_choice = input(Fore.MAGENTA + "Choose a distribution (1-10): ")
         if linux_choice == '1':
             print(Fore.YELLOW + "")
@@ -331,7 +331,38 @@ def install_os(choice=None):
                     print(Fore.RED + "Invalid choice. Please choose a valid option.")
                     return install_os('3')
         elif linux_choice == '3':
-            pass #TODO: Add arch linux installation options.
+            url = "https://geo.mirror.pkgbuild.com/iso/2026.02.01/archlinux-x86_64.iso"
+            return download_file(url,"archlinux-x86_64.iso")
+        elif linux_choice == '4':
+            print(Fore.CYAN + "1. Kali Linux Installer (x86_64)\n2. Kali Linux NetInstaller\n3. Kali Linux Installer (ARM64)\n4. VMware Image\n5. VirtualBox Image\n6. Hyper-V Image\n7. Exit")
+            choice = input(Fore.MAGENTA + "Choose an option (1-6):")
+            match choice:
+                case '1':
+                    url = "https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-installer-amd64.iso"
+                    return download_file(url,"kali-linux-installer-amd64.iso")
+                case '2':
+                    url = "https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-installer-netinst-amd64.iso"
+                    return download_file(url, "kali-linux-netinstaller-amd64.iso")
+                case '3':
+                    url = "https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-installer-arm64.iso"
+                    return download_file(url, "kali-linux-installer-arm64.iso")
+                case '4':
+                    download_file("https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-vmware-amd64.7z", "kali-linux-vmware-amd64.7z")
+                    print(Fore.YELLOW + "Please extract the archive and import the .vmx file into VMware to use the image.")
+                case '5':
+                    download_file("https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-virtualbox-amd64.7z", "kali-linux-virtualbox-amd64.7z")
+                    print(Fore.YELLOW + "Please extract the archive and import the .vbox file into VirtualBox to use the image.")
+                case '6':
+                    download_file("https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-hyperv-amd64.7z", "kali-linux-hyperv-amd64.7z")
+                    print(Fore.YELLOW + "Please extract the archive and import the .xml file into Hyper-V to use the image.")
+                case '7':
+                    print(Fore.CYAN + "Returning to main menu...")
+                    return main()
+                case _:
+                    print(Fore.RED + "Invalid choice. Please choose a valid option.")
+                    return install_os('3')
+        elif linux_choice == '5':
+            pass #TODO: Add parrot os options
     elif choice == '4':
         main()
     else:
