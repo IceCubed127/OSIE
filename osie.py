@@ -268,8 +268,8 @@ def install_os(choice=None):
                 return main()
     elif choice == '3':
         print(Fore.CYAN + "Choose a Linux Distribution:")
-        print(Fore.CYAN + "1. Ubuntu\n2.Fedora\n3. Arch Linux\n4. Kali Linux\n5. Parrot OS\n6. Debian\n7. Linux Mint\n8. Pop!_OS\n9. Zorin OS\n10. Exit")
-        linux_choice = input(Fore.MAGENTA + "Choose a distribution (1-10): ")
+        print(Fore.CYAN + "1. Ubuntu\n2.Fedora\n3. Arch Linux\n4. Kali Linux\n5. Debian\n6. Linux Mint\n7. Pop!_OS\n8. Zorin OS\n9. Exit")
+        linux_choice = input(Fore.MAGENTA + "Choose a distribution (1-9): ")
         if linux_choice == '1':
             print(Fore.YELLOW + "")
             print(Fore.CYAN + "1. Ubuntu 24.04.3 LTS\n2. Ubuntu 25.10\n3. Ubuntu 22.04 LTS (Jammy Jellyfish)\n4. Ubuntu Server 24.04.3 LTS\n5. Ubuntu Server 25.10\n6. Other Ubuntu Versions\n7. Exit")
@@ -335,7 +335,7 @@ def install_os(choice=None):
             return download_file(url,"archlinux-x86_64.iso")
         elif linux_choice == '4':
             print(Fore.CYAN + "1. Kali Linux Installer (x86_64)\n2. Kali Linux NetInstaller\n3. Kali Linux Installer (ARM64)\n4. VMware Image\n5. VirtualBox Image\n6. Hyper-V Image\n7. Exit")
-            choice = input(Fore.MAGENTA + "Choose an option (1-6):")
+            choice = input(Fore.MAGENTA + "Choose an option (1-6): ")
             match choice:
                 case '1':
                     url = "https://cdimage.kali.org/kali-2025.4/kali-linux-2025.4-installer-amd64.iso"
@@ -362,7 +362,52 @@ def install_os(choice=None):
                     print(Fore.RED + "Invalid choice. Please choose a valid option.")
                     return install_os('3')
         elif linux_choice == '5':
-            pass #TODO: Add parrot os options
+            return download_file("https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.3.0-amd64-netinst.iso", "debian-13.3.0-amd64-netinst.iso")
+        elif linux_choice == '6':
+            print(Fore.CYAN + "1. Cinnamon - Modern themed fully featured desktop\n2. MATE - Traditional & Faster Desktop\n3. Xfce - Lightweight Desktop Environment\n4. Exit")
+            choice = input(Fore.MAGENTA + "Choose a desktop environment (1-4): ")
+            match choice:
+                case '1':
+                    print(Fore.GREEN + "Verify Checksum here: https://linuxmint.com/edition.php?id=326")
+                    return download_file("https://pub.linuxmint.io/stable/22.3/linuxmint-22.3-cinnamon-64bit.iso", "linuxmint-22.3-cinnamon-64bit.iso")
+                case '2':
+                    print(Fore.GREEN + "Verify Checksum here: https://linuxmint.com/edition.php?id=328")
+                    return download_file("https://pub.linuxmint.io/stable/22.3/linuxmint-22.3-mate-64bit.iso", "linuxmint-22.3-mate-64bit.iso")
+                case '3':
+                    print(Fore.GREEN + "Verify Checksum here: https://linuxmint.com/edition.php?id=327")
+                    return download_file("https://pub.linuxmint.io/stable/22.3/linuxmint-22.3-xfce-64bit.iso", "linuxmint-22.3-xfce-64bit.iso")
+                case '4':
+                    print(Fore.CYAN + "Returning to main menu...")
+                    return main()
+                case _:
+                    print(Fore.RED + "Invalid choice. Please choose a valid option.")
+                    return install_os('3')
+        elif linux_choice == '7':
+            print(Fore.CYAN + "1. LTS (Intel, AMD and Nvidia 10 Series and Lower)\n2. LTS for Nvidia GPUs 16 Series and Higher\n3. LTS for ARM64 Devices\n4. LTS for ARM64 With Nvidia GPUs\n5. Exit")
+            choice = input(Fore.MAGENTA + "Choose an option (1-5): ")
+            match choice:
+                case '1':
+                    return download_file("https://iso.pop-os.org/24.04/amd64/generic/23/pop-os_24.04_amd64_generic_23.iso", "popos-24.04-amd64-generic.iso")
+                case '2':
+                    return download_file("https://iso.pop-os.org/24.04/amd64/nvidia/23/pop-os_24.04_amd64_nvidia_23.iso", "popos-24.04-amd64-nvidia.iso")
+                case '3':
+                    return download_file("https://iso.pop-os.org/24.04/arm64/generic/3/pop-os_24.04_arm64_generic_3.iso", "popos-24.04-arm64-generic.iso")
+                case '4':
+                    return download_file("https://iso.pop-os.org/24.04/arm64/nvidia/3/pop-os_24.04_arm64_nvidia_3.iso", "popos-24.04-arm64-nvidia.iso")
+                case '5':
+                    print(Fore.CYAN + "Returning to main menu...")
+                    return main()
+                case _:
+                    print(Fore.RED + "Invalid choice. Please choose a valid option.")
+                    return install_os('3')
+        elif linux_choice == '8':
+            return download_file("https://mirrors.edge.kernel.org/zorinos-isos/18/Zorin-OS-18-Core-64-bit-r3.iso", "zorin-os-18-core-64-bit.iso")
+        elif linux_choice == '9':
+            print(Fore.CYAN + "Returning to main menu...")
+            return main()
+        else:
+            print(Fore.RED + "Invalid choice. Please choose a valid option.")
+            return install_os('3')
     elif choice == '4':
         main()
     else:
