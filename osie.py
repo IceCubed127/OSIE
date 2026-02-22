@@ -414,7 +414,54 @@ def install_os(choice=None):
         print(Fore.RED + "Invalid choice. Please try again.")
         return install_os()
 
+def check_rpi():
+    if os.name == 'nt':
+        path = r"C:\Program Files (x86)\Raspberry Pi Imager\rpi-imager.exe"
+        if not os.path.exists(path):
+            print(Fore.YELLOW + "Raspberry Pi Imager was not found. Please enter the path to 'rpi-imager.exe'. Press enter to download the installer.")
+            new_path = input(Fore.MAGENTA + "Path: ").strip('"')
+            if new_path.strip() == "":
+                download_file("https://downloads.raspberrypi.com/imager/imager_latest.exe", "rpi-imager-install.exe")
+                input(Fore.CYAN + "Press Enter to continue. Please ensure that the Imager is now installed before you proceed.")
+                return check_rpi()
+            else:
+                if os.path.exists(new_path) and new_path.endswith("rpi-imager.exe"):
+                    return new_path
+        else:
+            return path
+    elif os.name == 'posix':
+        path = "/Applications/Raspberry Pi Imager.app/Contents/MacOS/rpi-imager"
+        if not os.path.exists(path):
+            print(Fore.YELLOW + "Raspberry Pi Imager was not found. Please enter the path to 'rpi-imager'. Press enter to download the installer.")
+            new_path = input(Fore.MAGENTA + "Path: ").strip('"')
+            if new_path.strip() == "":
+                webbrowser.open("https://downloads.raspberrypi.com/imager/imager_latest.dmg")
+                input(Fore.CYAN + "Press Enter to continue. Please ensure that the Imager is now installed before you proceed.")
+                return check_rpi()
+            else:
+                if os.path.exists(new_path) and new_path.endswith("rpi-imager"):
+                    return new_path
+        else:
+            return path
+    else:
+        import shutil
+        path = shutil.which("rpi-imager")
+        if path:
+            return path
+        else:
+            print(Fore.YELLOW + "Raspberry Pi Imager was not found. Please enter the path to 'rpi-imager'. Press enter to download.")
+            new_path = input(Fore.MAGENTA + "Path: ").strip('"')
+            if new_path.strip() == "":
+                os.system("sudo apt-get update && sudo apt-get install rpi-imager -y")
+                input(Fore.CYAN + "Press Enter to continue. Please ensure that the Imager is now installed before you proceed.")
+                return check_rpi()
+            else:
+                if os.path.exists(new_path) and os.access(new_path, os.X_OK):
+                    return new_path
+    
+
 def extract_os_image(path=None):
+    rpi = check_rpi()
     pass #TODO: Should take the file path of the OS image as an argument. If not found, then should prompt the user to provide the path.
 
 def ascii(clear=False):
