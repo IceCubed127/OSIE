@@ -3,11 +3,11 @@ name: Draft Release with Binaries
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag to create the draft release from (for example: v1.0.0)'
+        description: "Tag to create the draft release from (for example: v1.0.0)"
         required: true
         type: string
 
@@ -36,7 +36,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
