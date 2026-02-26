@@ -273,7 +273,7 @@ def install_os(choice=None):
                 return main()
     elif choice == '3':
         print(Fore.CYAN + "Choose a Linux Distribution:")
-        print(Fore.CYAN + "1. Ubuntu\n2.Fedora\n3. Arch Linux\n4. Kali Linux\n5. Debian\n6. Linux Mint\n7. Pop!_OS\n8. Zorin OS\n9. Exit")
+        print(Fore.CYAN + "1. Ubuntu\n2. Fedora\n3. Arch Linux\n4. Kali Linux\n5. Debian\n6. Linux Mint\n7. Pop!_OS\n8. Zorin OS\n9. Exit")
         linux_choice = input(Fore.MAGENTA + "Choose a distribution (1-9): ")
         if linux_choice == '1':
             print(Fore.YELLOW + "")
