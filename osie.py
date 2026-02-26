@@ -121,6 +121,7 @@ def install_os(choice=None):
             user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
             if user_input.lower() == 'y':
                 path = Path(os.getcwd()) / "OSIE" / "OpenCore" / "macrecovery.py"
+                path.parent.mkdir(parents=True, exist_ok=True)
                 
                 # Check if file already exists
                 if path.exists():
@@ -151,35 +152,35 @@ def install_os(choice=None):
                 mac_choice = input(Fore.MAGENTA + "Choose a version (1-16): ")
                 match mac_choice:
                     case '1':
-                        os.system('py macrecovery.py -b Mac-CFF7D910A743CAAF -m 00000000000000000 -os latest download')
+                        os.system(f'py "{path}" -b Mac-CFF7D910A743CAAF -m 00000000000000000 -os latest download')
                     case '2':
-                        os.system('py macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download')
+                        os.system(f'py "{path}" -b Mac-937A206F2EE63C01 -m 00000000000000000 download')
                     case '3':
-                        os.system('py macrecovery.py -b Mac-226CB3C6A851A671 -m 00000000000000000 download')
+                        os.system(f'py "{path}" -b Mac-226CB3C6A851A671 -m 00000000000000000 download')
                     case '4':
-                        os.system('py macrecovery.py -b Mac-4B682C642B45593E -m 00000000000000000 download')
+                        os.system(f'py "{path}" -b Mac-4B682C642B45593E -m 00000000000000000 download')
                     case '5':
-                        os.system('py macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000000000 download')
+                        os.system(f'py "{path}" -b Mac-FFE5EF870D7BA81A -m 00000000000000000 download')
                     case '6':
-                        os.system('py macrecovery.py -b Mac-42FD25EABCABB274 -m 00000000000000000 download')
+                        os.system(f'py "{path}" -b Mac-42FD25EABCABB274 -m 00000000000000000 download')
                     case '7':
-                        os.system('py macrecovery.py -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
+                        os.system(f'py "{path}" -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
                     case '8':
-                        os.system('py macrecovery.py -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
+                        os.system(f'py "{path}" -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
                     case '9':
-                        os.system('py macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000J80300 download')
+                        os.system(f'py "{path}" -b Mac-7BA5B2D9E42DDD94 -m 00000000000J80300 download')
                     case '10':
-                        os.system('py macrecovery.py -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
+                        os.system(f'py "{path}" -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
                     case '11':
-                        os.system('py macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
+                        os.system(f'py "{path}" -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
                     case '12':
-                        os.system('py macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
+                        os.system(f'py "{path}" -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
                     case '13':
-                        os.system('py macrecovery.py -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
+                        os.system(f'py "{path}" -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
                     case '14':
-                        os.system('py macrecovery.py -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
+                        os.system(f'py "{path}" -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
                     case '15':
-                        os.system('py macrecovery.py -b Mac-2E6FAB96566FE58C -m 00000000000F25Y00 download')
+                        os.system(f'py "{path}" -b Mac-2E6FAB96566FE58C -m 00000000000F25Y00 download')
                     case '16':
                         print(Fore.CYAN + "Returning to main menu...")
                         return main()
@@ -202,6 +203,7 @@ def install_os(choice=None):
             user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
             if user_input.lower() == 'y':
                 path = Path(os.getcwd()) / "OSIE" / "OpenCore" / "macrecovery.py"
+                path.parent.mkdir(parents=True, exist_ok=True)
                 
                 # Check if file already exists
                 if path.exists():
@@ -232,35 +234,35 @@ def install_os(choice=None):
                 mac_choice = input(Fore.MAGENTA + "Choose a version (1-16): ")
                 match mac_choice:
                     case '1':
-                        os.system('python3 ./macrecovery.py -b Mac-CFF7D910A743CAAF -m 00000000000000000 -os latest download')
+                        os.system(f'python3 "{path}" -b Mac-CFF7D910A743CAAF -m 00000000000000000 -os latest download')
                     case '2':
-                        os.system('python3 ./macrecovery.py -b Mac-7BA5B2D9E42DDD94 -m 00000000000000000 download')
+                        os.system(f'python3 "{path}" -b Mac-7BA5B2D9E42DDD94 -m 00000000000000000 download')
                     case '3':
-                        os.system('python3 ./macrecovery.py -b Mac-827FAC58A8FDFA22 -m 00000000000000000 download')
+                        os.system(f'python3 "{path}" -b Mac-827FAC58A8FDFA22 -m 00000000000000000 download')
                     case '4':
-                        os.system('python3 ./macrecovery.py -b Mac-B4831CEBD52A0C4C -m 00000000000000000 download')
+                        os.system(f'python3 "{path}" -b Mac-B4831CEBD52A0C4C -m 00000000000000000 download')
                     case '5':
-                        os.system('python3 ./macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000000000 download')
+                        os.system(f'python3 "{path}" -b Mac-E43C1C25D4880AD6 -m 00000000000000000 download')
                     case '6':
-                        os.system('python3 ./macrecovery.py -b Mac-2BD1B31983FE1663 -m 00000000000000000 download')
+                        os.system(f'python3 "{path}" -b Mac-2BD1B31983FE1663 -m 00000000000000000 download')
                     case '7':
-                        os.system('python3 ./macrecovery.py -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
+                        os.system(f'python3 "{path}" -b Mac-00BE6ED71E35EB86 -m 00000000000000000 download')
                     case '8':
-                        os.system('python3 ./macrecovery.py -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
+                        os.system(f'python3 "{path}" -b Mac-7BA5B2DFE22DDD8C -m 00000000000KXPG00 download')
                     case '9':
-                        os.system('python3 ./macrecovery.py -b Mac-BE088AF8C5EB4FA2 -m 00000000000J80300 download')
+                        os.system(f'python3 "{path}" -b Mac-BE088AF8C5EB4FA2 -m 00000000000J80300 download')
                     case '10':
-                        os.system('python3 ./macrecovery.py -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
+                        os.system(f'python3 "{path}" -b Mac-77F17D7DA9285301 -m 00000000000J0DX00 download')
                     case '11':
-                        os.system('python3 ./macrecovery.py -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
+                        os.system(f'python3 "{path}" -b Mac-FFE5EF870D7BA81A -m 00000000000GQRX00 download')
                     case '12':
-                        os.system('python3 ./macrecovery.py -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
+                        os.system(f'python3 "{path}" -b Mac-E43C1C25D4880AD6 -m 00000000000GDVW00 download')
                     case '13':
-                        os.system('python3 ./macrecovery.py -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
+                        os.system(f'python3 "{path}" -b Mac-F60DEB81FF30ACF6 -m 00000000000FNN100 download')
                     case '14':
-                        os.system('python3 ./macrecovery.py -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
+                        os.system(f'python3 "{path}" -b Mac-7DF2A3B5E5D671ED -m 00000000000F65100 download')
                     case '15':
-                        os.system('python3 ./macrecovery.py -b Mac-C3EC7CD22292981F -m 00000000000F0HM00 download')
+                        os.system(f'python3 "{path}" -b Mac-C3EC7CD22292981F -m 00000000000F0HM00 download')
                     case '16':
                         print(Fore.CYAN + "Returning to main menu...")
                         return main()
