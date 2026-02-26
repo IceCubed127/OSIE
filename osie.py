@@ -1,4 +1,7 @@
+import json
 import os
+import subprocess
+import platform
 import webbrowser
 from pathlib import Path
 import time
@@ -6,6 +9,8 @@ import requests
 from tqdm import tqdm
 from colorama import init, Fore, Style
 init(autoreset=True)
+system_name = platform.system().lower()
+
 def download_file(url,filename):
     download_path = Path.home() / "Downloads" / "OSIE" / "ISOs" / filename
     temp_path = Path.home() / "Downloads" / "OSIE" / "ISOs" / (filename + '.osiedownload')
@@ -111,7 +116,7 @@ def install_os(choice=None):
             print(Fore.RED + "Invalid choice. Please choose a valid option.")
             return install_os('1')
     elif choice == '2':
-        if os.name == 'nt': #Windows
+        if system_name == 'windows': #Windows
             print(Fore.YELLOW + "Note: Installation of MacOS is not recommended via ISO images. Hence, a recovery image will be downloaded instead using OpenCore tools. This is the vanilla partition and does not have OpenCore EFI files, therefore should work exactly like an installer downloaded on MacOS.")
             user_input = input(Fore.MAGENTA + "Do you wish to continue? (y/n): ")
             if user_input.lower() == 'y':
@@ -185,7 +190,7 @@ def install_os(choice=None):
             else:
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
-        elif os.name == 'posix': # MacOSX
+        elif system_name == 'darwin': # MacOSX
             try:
                 os.system('softwareupdate --list-full-installers; echo; echo "Please enter version number you wish to download:"; read REPLY; [ -n "$REPLY" ] && softwareupdate --fetch-full-installer --full-installer-version "$REPLY"')
             except Exception as e:
@@ -415,8 +420,8 @@ def install_os(choice=None):
         return install_os()
 
 def check_rpi():
-    if os.name == 'nt':
-        path = r"C:\Program Files (x86)\Raspberry Pi Imager\rpi-imager.exe"
+    if system_name == 'windows':
+        path = r"C:\Program Files\Raspberry Pi Imager\rpi-imager.exe"
         if not os.path.exists(path):
             print(Fore.YELLOW + "Raspberry Pi Imager was not found. Please enter the path to 'rpi-imager.exe'. Press enter to download the installer.")
             new_path = input(Fore.MAGENTA + "Path: ").strip('"')
@@ -429,7 +434,7 @@ def check_rpi():
                     return new_path
         else:
             return path
-    elif os.name == 'posix':
+    elif system_name == 'darwin':
         path = "/Applications/Raspberry Pi Imager.app/Contents/MacOS/rpi-imager"
         if not os.path.exists(path):
             print(Fore.YELLOW + "Raspberry Pi Imager was not found. Please enter the path to 'rpi-imager'. Press enter to download the installer.")
@@ -458,15 +463,203 @@ def check_rpi():
             else:
                 if os.path.exists(new_path) and os.access(new_path, os.X_OK):
                     return new_path
-    
+
+def image_support(image_path):
+    image_name = str(image_path).lower()
+    supported_exts = (
+        ".iso",
+        ".img",
+        ".raw",
+        ".wic",
+        ".dmg",
+        ".zip",
+        ".gz",
+        ".xz",
+        ".bz2",
+        ".zst",
+        ".img.zip",
+        ".img.gz",
+        ".img.xz",
+        ".img.bz2",
+        ".img.zst",)
+    return image_name.endswith(supported_exts)
+
+def detect_usb():
+    drives = []
+
+    try:
+        if system_name == "windows":
+            command = [
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "Get-CimInstance Win32_LogicalDisk -Filter \"DriveType=2\" | ForEach-Object { \"$($_.DeviceID)|$($_.VolumeName)|$($_.Size)\" }",
+            ]
+            result = subprocess.run(command, capture_output=True, text=True, check=False)
+            for line in result.stdout.splitlines():
+                if not line.strip() or "|" not in line:
+                    continue
+                device,volume,size = (line.split("|",2)+["",""])[:3]
+                size_text = f"{round(int(size) / (1024**3), 1)} GB" if size.isdigit() else "Unknown Size"
+                label = f"{device} ({volume if volume else 'No Label'}, {size_text})"
+                drives.append((device, label))
+
+        elif system_name == "darwin":
+            result = subprocess.run(["diskutil", "list", "external", "physical"], capture_output=True, text=True, check=False)
+            for line in result.stdout.splitlines():
+                line = line.strip()
+                if line.startswith("/dev/disk"):
+                    disk = line.split()[0]
+                    drives.append((disk, f"{disk} (external physical disk)"))
+        else:
+            result = subprocess.run(["lsblk", "-J", "-o", "NAME,PATH,RM,SIZE,MODEL,TRAN,TYPE"], capture_output=True, text=True, check=False)
+            if result.stdout.strip():
+                data = json.loads(result.stdout)
+                for device in data.get("blockdevices", []):
+                    if device.get("type") != "disk":
+                        continue
+                    is_removable = str(device.get("rm", 0)) == "1"
+                    is_usb = str(device.get("tran", "")).lower() == "usb"
+                    if not (is_removable or is_usb):
+                        continue
+                    path = device.get("path")
+                    size = device.get("size", "Unknown Size")
+                    model = (device.get("model") or "Unknown Model").strip()
+                    drives.append((path, f"{path} ({model}, {size})"))
+    except Exception:
+        return []
+    return drives
+
+def resolve_windows_imager_target(target_device):
+    target = str(target_device).strip().strip('"')
+    if system_name != "windows":
+        return target
+
+    normalized_target = target.rstrip("\\/")
+    if normalized_target.lower().startswith(r"\\.\physicaldrive"):
+        return normalized_target
+
+    if len(normalized_target) == 2 and normalized_target[1] == ":" and normalized_target[0].isalpha():
+        drive_letter = normalized_target[0].upper()
+        command = [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            (
+                f"$partition = Get-Partition -DriveLetter '{drive_letter}' -ErrorAction SilentlyContinue; "
+                "if ($partition) { "
+                "$diskNumber = $partition | Get-Disk -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty Number; "
+                "if ($null -ne $diskNumber) { \"\\\\.\\PhysicalDrive$diskNumber\" }"
+                " }"
+            ),
+        ]
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
+        mapped_target = result.stdout.strip()
+        if mapped_target:
+            return mapped_target
+
+    return normalized_target
 
 def extract_os_image(path=None):
     rpi = check_rpi()
-    pass #TODO: Should take the file path of the OS image as an argument. If not found, then should prompt the user to provide the path.
+    if not rpi:
+        print(Fore.RED + "Raspberry Pi Imager not found. Please install it to use the extraction feature.")
+        return None
+    path = input(Fore.MAGENTA + "Enter the path to the OS image you wish to extract: ").strip('"') if not path else path
+    if not path:
+        print(Fore.RED + "No path provided. Please enter a valid path")
+        return None
+    image_path = Path(path)
+    if not image_support(image_path):
+        print(Fore.RED + "Unsupported file type. Please follow other appropriate methods to use this file.")
+        return None
+
+    while True:
+        while True:
+            drives = detect_usb()
+            print(Fore.CYAN + "\nAvailable detachable USB targets:")
+            if drives:
+                for index, (_, label) in enumerate(drives, start=1):
+                    print(Fore.CYAN + f"{index}. {label}")
+            else:
+                print(Fore.YELLOW + "No removable drives detected. Please reconnect your USB drive and try again!")
+
+            user_choice = input(
+                Fore.MAGENTA
+                + "Choose target number or enter target path (e.g. E:, /dev/disk2, /dev/sdb), R to refresh scan, or Q to cancel: "
+            ).strip('"')
+
+            if not user_choice:
+                print(Fore.RED + "No USB target selected.")
+                return None
+
+            if user_choice.lower() == 'q':
+                print(Fore.CYAN + "Operation cancelled.")
+                return None
+
+            if user_choice.lower() == 'r':
+                print(Fore.CYAN + "Refreshing USB drive scan...")
+                continue
+
+            if user_choice.isdigit() and drives:
+                selected_index = int(user_choice) - 1
+                if selected_index < 0 or selected_index >= len(drives):
+                    print(Fore.RED + "Invalid Selection.")
+                    continue
+                target_device = drives[selected_index][0]
+                break
+
+            target_device = user_choice
+            break
+
+        print(Fore.RED + Style.BRIGHT + "\nWarning: All data on selected USB drive will be permanently erased. Make sure to backup any important data before proceeding.\n")
+        confirm = input(Fore.MAGENTA + "Type ERASE to continue, or anything else to cancel: ").strip()
+        if confirm != "ERASE":
+            print(Fore.CYAN + "Operation cancelled.")
+            return None
+
+        imager_target = resolve_windows_imager_target(target_device)
+        print(Fore.CYAN + f"Flashing {image_path.name} ------> {target_device}...")
+
+        try:
+            result = subprocess.run([rpi, "--cli", str(image_path), str(imager_target)], capture_output=True, text=True, check=False)
+        except FileNotFoundError:
+            print(Fore.RED + "Failed to start Raspberry Pi Imager. Verify that the executable path is corrent and try again.")
+            return None
+        except OSError as e:
+            if system_name == "windows" and getattr(e, "winerror", None) == 740:
+                print(Fore.RED + "This operation requires Administrator privileges.")
+                print(Fore.YELLOW + "Please re-run the program as Administrator and try again.")
+            else:
+                print(Fore.YELLOW + "Permission denied. Please try again with elevated privileges.")
+            return None
+
+        if result.returncode == 0:
+            print(Fore.GREEN + "Image burned successfully.")
+            print(Fore.GREEN + "You can safely remove your USB Device and use it to install the flashed image onto the target device.")
+            return main()
+
+        output_text = f"{result.stdout}\n{result.stderr}".lower()
+        print(Fore.RED + f"Burn failed (exit code {result.returncode}).")
+        non_removable_markers = (
+            "not a removable",
+            "select a drive that is removable",
+            "removable drive",
+        )
+        if any(marker in output_text for marker in non_removable_markers):
+            print(Fore.YELLOW + "The selected target is not recognized as removable by Raspberry Pi Imager.")
+            print(Fore.CYAN + "Please select a different drive.")
+            continue
+
+        if result.stderr.strip():
+            print(Fore.YELLOW + result.stderr.strip())
+        else:
+            print(Fore.YELLOW + "Check that the USB target is correct and try again with elevated privileges.")
+        return None
 
 def ascii(clear=False):
     if clear:
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls' if system_name == 'windows' else 'clear')
     print(r"""                                                                      
                                                                       
      OOOOOOOOO         SSSSSSSSSSSSSSS  IIIIIIIIII EEEEEEEEEEEEEEEEEEEEEE
