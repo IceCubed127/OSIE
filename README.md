@@ -13,13 +13,13 @@ It supports Windows, macOS, and Linux host systems (with platform-specific behav
 - Interactive menu-driven CLI
 - Download with retry + resume support (`.osiedownload` temporary files)
 - Operating system image selection for:
-	- Windows (Windows 11, Windows 10, Windows XP SP3 language variants)
-	- macOS recovery image workflow (OpenCore `macrecovery.py` flow)
-	- Linux distributions (Ubuntu, Fedora, Arch, Kali, Debian, Linux Mint, Pop!_OS, Zorin)
+  - Windows (Windows 11, Windows 10, Windows XP SP3 language variants)
+  - macOS recovery image workflow (OpenCore `macrecovery.py` flow)
+  - Linux distributions (Ubuntu, Fedora, Arch, Kali, Debian, Linux Mint, Pop!\_OS, Zorin)
 - USB target detection:
-	- Windows: PowerShell removable drive detection
-	- macOS: `diskutil` external physical disks
-	- Linux: `lsblk` removable/USB disks
+  - Windows: PowerShell removable drive detection
+  - macOS: `diskutil` external physical disks
+  - Linux: `lsblk` removable/USB disks
 - Safety confirmation before flashing (requires typing `ERASE`)
 
 ## Requirements
@@ -53,11 +53,11 @@ Main menu options:
 OSIE uses Raspberry Pi Imager CLI for writing images. You must have Raspberry Pi Imager installed (or provide its executable path when prompted).
 
 - Windows expected default path:
-	- `C:\Program Files\Raspberry Pi Imager\rpi-imager.exe`
+  - `C:\Program Files\Raspberry Pi Imager\rpi-imager.exe`
 - macOS expected default path:
-	- `/Applications/Raspberry Pi Imager.app/Contents/MacOS/rpi-imager`
+  - `/Applications/Raspberry Pi Imager.app/Contents/MacOS/rpi-imager`
 - Linux:
-	- Uses `rpi-imager` from `PATH` (or asks you to install/provide path)
+  - Uses `rpi-imager` from `PATH` (or asks you to install/provide path)
 
 Supported image extensions include:
 
@@ -68,12 +68,12 @@ Supported image extensions include:
 ## Platform-Specific Behavior
 
 - **Windows host:**
-	- Can download macOS recovery components via OpenCore `macrecovery.py`
-	- Uses `py` launcher for some internal commands
+  - Can download macOS recovery components via OpenCore `macrecovery.py`
+  - Uses `py` launcher for some internal commands
 - **macOS host:**
-	- Uses `softwareupdate` for full macOS installers
+  - Uses `softwareupdate` for full macOS installers
 - **Linux/other hosts:**
-	- Uses OpenCore `macrecovery.py` via `python3` for macOS recovery download
+  - Uses OpenCore `macrecovery.py` via `python3` for macOS recovery download
 
 ## Important Warnings
 
@@ -85,7 +85,7 @@ Supported image extensions include:
 
 - If a download fails, rerun OSIE to resume from the partial `.osiedownload` file.
 - If removable drives are not detected:
-	- Reconnect the USB device
-	- Refresh scan from the prompt (`R`)
-	- Retry with elevated privileges (Administrator/sudo) when required
+  - Reconnect the USB device
+  - Refresh scan from the prompt (`R`)
+  - Retry with elevated privileges (Administrator/sudo) when required
 - If flashing fails on Windows with privilege errors, rerun the program as Administrator.
