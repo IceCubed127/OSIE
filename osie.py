@@ -187,7 +187,7 @@ def install_os(choice=None):
                     case _:
                         print(Fore.CYAN + "Invalid Input. Please enter a valid option")
                         return install_os('2')
-                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE" / "OpenCore"}")
+                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / 'OSIE' / 'OpenCore'}")
             else:
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
@@ -269,7 +269,7 @@ def install_os(choice=None):
                     case _:
                         print(Fore.CYAN + "Invalid Input. Please enter a valid option")
                         return install_os('2')
-                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / "OSIE" / "OpenCore"}")
+                print(Fore.GREEN + f"Download completed Successfully. Files are saved at {Path(os.getcwd()) / 'OSIE' / 'OpenCore'}")
             else:
                 print(Fore.CYAN + "Returning to main menu...")
                 return main()
