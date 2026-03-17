@@ -2,6 +2,8 @@ import json
 import os
 import subprocess
 import platform
+import sys
+import ctypes
 import webbrowser
 from pathlib import Path
 import time
@@ -10,6 +12,46 @@ from tqdm import tqdm
 from colorama import init, Fore, Style
 init(autoreset=True)
 system_name = platform.system().lower()
+
+def is_elevated():
+    if system_name == 'windows':
+        try:
+            return bool(ctypes.windll.shell32.IsUserAnAdmin())
+        except Exception:
+            return False
+    return hasattr(os, "geteuid") and os.geteuid() == 0
+
+def elevation_req():
+    if is_elevated():
+        return True
+    
+    print(Fore.YELLOW + f"Current permission mode: {"elevated" if is_elevated() else "standard"} user.")
+    print(Fore.YELLOW + "Flashing to USB requires elevated permissions (Administrator/root[sudo]).")
+    elevate = input(Fore.MAGENTA + "Request elevated permissions now? (y/n): ")
+    if elevate != 'y':
+        print(Fore.CYAN + "Operation Cancelled")
+        return False
+
+    if system_name == "windows":
+        try:
+            params = subprocess.list2cmdline(sys.argv)
+            result = ctypes.windll.shell32.shellExecuteW(None, "runas", sys.executable, params, None, 1)
+            if result <= 32:
+                print(Fore.RED + "Failed to request Administrator privileges.")
+                return False
+            print(Fore.CYAN + "Requested Elevated Permissions. Continuing in Administrator window...")
+            sys.exit(0)
+        except Exception as e:
+            print(Fore.RED + f"An Error Occurred while requesting permissions: {e}")
+            return False
+    else:
+        try:
+            os.execvp("sudo", ["sudo", sys.executable] + sys.argv)
+        except FileNotFoundError:
+            print(Fore.RED + "sudo command was not found on this system. Please try running the program with elevated permissions manually.")
+        except Exception as e:
+            print(Fore.RED + f"An Error Occurred while requesting permissions: {e}")
+        return False
 
 def download_file(url,filename):
     download_path = Path.home() / "Downloads" / "OSIE" / "ISOs" / filename
@@ -618,6 +660,9 @@ def extract_os_image(path=None):
         confirm = input(Fore.MAGENTA + "Type ERASE to continue, or anything else to cancel: ").strip()
         if confirm != "ERASE":
             print(Fore.CYAN + "Operation cancelled.")
+            return None
+
+        if not elevation_req():
             return None
 
         imager_target = resolve_windows_imager_target(target_device)
