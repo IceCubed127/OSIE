@@ -21,11 +21,14 @@ def is_elevated():
             return False
     return hasattr(os, "geteuid") and os.geteuid() == 0
 
+def elevation_mode():
+    return "elevated" if is_elevated() else "standard"
+
 def elevation_req():
     if is_elevated():
         return True
     
-    print(Fore.YELLOW + f"Current permission mode: {"elevated" if is_elevated() else "standard"} user.")
+    print(Fore.YELLOW + f"Current permission mode: {elevation_mode()} user.")
     print(Fore.YELLOW + "Flashing to USB requires elevated permissions (Administrator/root[sudo]).")
     elevate = input(Fore.MAGENTA + "Request elevated permissions now? (y/n): ")
     if elevate != 'y':
