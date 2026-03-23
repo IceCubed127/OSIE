@@ -416,7 +416,7 @@ def install_os(choice=None):
                     print(Fore.RED + "Invalid choice. Please choose a valid option.")
                     return install_os('3')
         elif linux_choice == '5':
-            return download_file("https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.3.0-amd64-netinst.iso", "debian-13.3.0-amd64-netinst.iso")
+            return download_file("https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.4.0-amd64-netinst.iso", "debian-13.4.0-amd64-netinst.iso")
         elif linux_choice == '6':
             print(Fore.CYAN + "1. Cinnamon - Modern themed fully featured desktop\n2. MATE - Traditional & Faster Desktop\n3. Xfce - Lightweight Desktop Environment\n4. Exit")
             choice = input(Fore.MAGENTA + "Choose a desktop environment (1-4): ")
