@@ -61,6 +61,8 @@ def download_file(url,filename):
     temp_path = Path.home() / "Downloads" / "OSIE" / "ISOs" / (filename + '.osiedownload')
     max_retries = 3
 
+    download_path.parent.mkdir(parents=True, exist_ok=True)
+
     print(f"Downloading to {download_path}...")
     for attempt in range(1,max_retries+1):
         try:
@@ -324,12 +326,12 @@ def install_os(choice=None):
         linux_choice = input(Fore.MAGENTA + "Choose a distribution (1-9): ")
         if linux_choice == '1':
             print(Fore.YELLOW + "")
-            print(Fore.CYAN + "1. Ubuntu 24.04.3 LTS\n2. Ubuntu 25.10\n3. Ubuntu 22.04 LTS (Jammy Jellyfish)\n4. Ubuntu Server 24.04.3 LTS\n5. Ubuntu Server 25.10\n6. Other Ubuntu Versions\n7. Exit")
-            ubuntu_choice = input(Fore.MAGENTA + "Choose an Ubuntu Version:")
+            print(Fore.CYAN + "1. Ubuntu 24.04.4 LTS\n2. Ubuntu 25.10\n3. Ubuntu 22.04 LTS (Jammy Jellyfish)\n4. Ubuntu Server 24.04.3 LTS\n5. Ubuntu Server 25.10\n6. Other Ubuntu Versions\n7. Exit")
+            ubuntu_choice = input(Fore.MAGENTA + "Choose an Ubuntu Version: ")
             match ubuntu_choice:
                 case '1':
-                    url = 'https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-desktop-amd64.iso'
-                    filename = 'ubuntu-24.04.3-desktop-amd64.iso'
+                    url = 'https://releases.ubuntu.com/24.04.4/ubuntu-24.04.4-desktop-amd64.iso'
+                    filename = 'ubuntu-24.04.4-desktop-amd64.iso'
                     return download_file(url,filename)
                 case '2':
                     url = "https://releases.ubuntu.com/25.10/ubuntu-25.10-desktop-amd64.iso"
